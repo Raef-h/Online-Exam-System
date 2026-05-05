@@ -1,0 +1,59 @@
+MCQ
+What does OOP stand for?
+A. Object-Oriented Programming
+B. Object-Oriented Process
+C. Online Object Programming
+D. Operational Object Paradigm
+A
+
+TF
+Java is a compiled language that runs on the JVM.
+True
+
+MCQ
+Which keyword is used to inherit a class in Java?
+A. implements
+B. inherits
+C. extends
+D. super
+C
+
+TF
+A constructor can have a return type in Java.
+False
+
+MCQ
+Which data structure uses LIFO order?
+A. Queue
+B. Stack
+C. LinkedList
+D. Tree
+B
+
+TF
+Python is a statically typed programming language.
+False
+
+MCQ
+What is the time complexity of binary search?
+A. O(n)
+B. O(n^2)
+C. O(log n)
+D. O(1)
+C
+
+TF
+A thread in Java can be created by implementing the Runnable interface.
+True
+
+MCQ
+Which of the following is NOT a JavaFX layout pane?
+A. HBox
+B. VBox
+C. GridPane
+D. DataPane
+D
+
+TF
+The HTTP protocol is stateless.
+True

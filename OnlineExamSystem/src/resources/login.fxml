@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="client.LoginController"
+      alignment="CENTER" spacing="15">
+    
+    <padding><Insets top="50" right="50" bottom="50" left="50"/></padding>
+    
+    <GridPane hgap="10" vgap="15" alignment="CENTER">
+        <Label text="Student ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="RIGHT"/>
+        <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="0" text="123456789"/>
+        
+        <Label text="Server IP:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
+        <TextField fx:id="ipField" GridPane.columnIndex="1" GridPane.rowIndex="1" text="127.0.0.1"/>
+        
+        <Label text="Port No.:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT"/>
+        <TextField fx:id="portField" GridPane.columnIndex="1" GridPane.rowIndex="2" text="3000"/>
+    </GridPane>
+    
+    <Region prefHeight="30"/>
+    <Button fx:id="connectBtn" text="Connect" onAction="#handleConnect"/>
+    
+    <Label fx:id="errorLabel" textFill="red"/>
+</VBox>

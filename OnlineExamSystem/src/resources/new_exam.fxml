@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="server.NewExamController"
+      alignment="TOP_CENTER" spacing="15">
+    
+    <MenuBar>
+        <Menu text="New Exam"/>
+        <Menu text="Help">
+            <MenuItem text="About" onAction="#handleHelp"/>
+        </Menu>
+    </MenuBar>
+
+    <VBox alignment="CENTER" spacing="15">
+        <padding><Insets top="30" right="50" bottom="30" left="50"/></padding>
+        
+        <GridPane hgap="10" vgap="10" alignment="CENTER">
+            <Label text="Course Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="RIGHT"/>
+            <TextField fx:id="courseNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            
+            <Label text="Year:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
+            <ComboBox fx:id="yearCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="100"/>
+            
+            <Label text="Semester:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT"/>
+            <ComboBox fx:id="semesterCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="100"/>
+            
+            <Label text="Exam questions:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="RIGHT"/>
+            <Button text="import file" onAction="#handleImport" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="120"/>
+        </GridPane>
+        
+        <Label fx:id="mcqLabel" text="MCQ: 0"/>
+        <Label fx:id="tfLabel" text="TF: 0"/>
+        
+        <Region prefHeight="20"/>
+        <Button text="Create Exam" onAction="#handleCreateExam"/>
+        <Label fx:id="errorLabel" textFill="red"/>
+    </VBox>
+</VBox>
