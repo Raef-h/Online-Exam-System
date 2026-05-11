@@ -17,6 +17,10 @@ public class ClientHandler implements Runnable {
 
     private String studentName;
     private boolean active = true;
+    private int currentIndex = 0;
+    private int currentScore = 0;
+    private Exam selectedExam;
+    private int totalQuestions = 0;
 
     public ClientHandler(Socket socket, DatabaseManager db,
                          List<Exam> activeExams, ExamServer server) {
@@ -49,32 +53,32 @@ public class ClientHandler implements Runnable {
             if (selMsg.getType() != Message.Type.SELECT_EXAM) { sendError("Expected exam selection"); return; }
             int selectedId = (Integer) selMsg.getData();
 
-            Exam exam = findExam(selectedId);
-            if (exam == null) { sendError("Exam not found"); return; }
+            selectedExam = findExam(selectedId);
+            if (selectedExam == null) { sendError("Exam not found"); return; }
 
-            server.log(studentName + " selected exam: " + exam.getExamName());
-            LogManager.log("EXAM_SELECT: " + studentName + " -> " + exam.getExamName());
+            server.log(studentName + " selected exam: " + selectedExam.getExamName());
+            LogManager.log("EXAM_SELECT: " + studentName + " -> " + selectedExam.getExamName());
 
             // 4. Check if already completed
-            if (db.hasCompleted(studentName, exam.getExamId())) {
+            if (db.hasCompleted(studentName, selectedExam.getExamId())) {
                 sendError("You have already completed this exam."); return;
             }
 
             // 5. Send exam info (no questions)
-            Exam examWithoutQs = new Exam(exam.getExamId(), exam.getExamName(), exam.getYear(), exam.getSemester(), exam.getStartDateTime(), new ArrayList<>());
+            Exam examWithoutQs = new Exam(selectedExam.getExamId(), selectedExam.getExamName(), selectedExam.getYear(), selectedExam.getSemester(), selectedExam.getStartDateTime(), new ArrayList<>());
             send(new Message(Message.Type.EXAM_DATA, examWithoutQs));
 
             // 6. Enter question loop
-            int[] progress = db.getProgress(studentName, exam.getExamId());
-            int currentIndex = progress[0];
-            int currentScore = progress[1];
+            int[] progress = db.getProgress(studentName, selectedExam.getExamId());
+            currentIndex = progress[0];
+            currentScore = progress[1];
             
-            List<Question> questions = exam.getQuestions();
-            int totalQuestions = questions.size();
+            List<Question> questions = selectedExam.getQuestions();
+            totalQuestions = questions.size();
 
             while (currentIndex < totalQuestions) {
                 // Check if time expired
-                long minutes = Duration.between(exam.getStartDateTime(), LocalDateTime.now()).toMinutes();
+                long minutes = java.time.Duration.between(selectedExam.getStartDateTime(), java.time.LocalDateTime.now()).toMinutes();
                 if (minutes >= 60) {
                     sendError("Exam time has expired (60 minutes).");
                     break;
@@ -105,14 +109,15 @@ public class ClientHandler implements Runnable {
                 }
                 
                 currentIndex++;
-                db.saveProgress(studentName, exam.getExamId(), currentIndex, currentScore);
+                db.saveProgress(studentName, selectedExam.getExamId(), currentIndex, currentScore);
             }
 
             // 7. Grade and finalize if completed
             if (currentIndex >= totalQuestions) {
-                Result result = new Result(studentName, exam.getExamId(), exam.getExamName(),
+                Result result = new Result(studentName, selectedExam.getExamId(), selectedExam.getExamName(),
+                                           selectedExam.getYear(), selectedExam.getSemester(),
                                            currentScore, totalQuestions);
-                db.saveResult(result, exam);
+                db.saveResult(result, selectedExam);
                 server.log(studentName + " scored " + currentScore + "/" + totalQuestions);
                 LogManager.log("EXAM_COMPLETE: " + studentName + " score=" + currentScore);
 
@@ -134,7 +139,7 @@ public class ClientHandler implements Runnable {
         List<ExamInfo> list = new ArrayList<>();
         synchronized (activeExams) {
             for (Exam e : activeExams) {
-                long minutes = Duration.between(e.getStartDateTime(), LocalDateTime.now()).toMinutes();
+                long minutes = java.time.Duration.between(e.getStartDateTime(), java.time.LocalDateTime.now()).toMinutes();
                 if (minutes < 60) {
                     list.add(new ExamInfo(e.getExamId(), e.getExamName(),
                                           e.getStartDateTime(), e.getQuestions().size()));
@@ -166,4 +171,8 @@ public class ClientHandler implements Runnable {
     }
 
     public String getStudentName() { return studentName; }
+    public String getExamName() { return selectedExam != null ? selectedExam.getExamName() : "-"; }
+    public String getProgress() { return currentIndex + "/" + totalQuestions; }
+    public String getScore() { return String.valueOf(currentScore); }
+    public String getIp() { return socket.getInetAddress().getHostAddress(); }
 }

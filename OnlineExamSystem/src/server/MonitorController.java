@@ -41,7 +41,13 @@ public class MonitorController {
         rows.clear();
         for (ClientHandler h : server.getActiveClients()) {
             String name = h.getStudentName() != null ? h.getStudentName() : "Connecting...";
-            rows.add(new StudentRow(name, "Active", "-", "-", "-"));
+            rows.add(new StudentRow(
+                name, 
+                h.getExamName(), 
+                h.getProgress(), 
+                h.getScore(), 
+                h.getIp()
+            ));
         }
         totalLabel.setText("Active Students: " + rows.size());
     }

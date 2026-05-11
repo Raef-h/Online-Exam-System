@@ -40,14 +40,38 @@ public class ServerController {
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getExamName()));
         colTime.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getStartDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
-        colActive.setCellValueFactory(data -> new SimpleStringProperty("0")); // Simplified for UI
-        colComplete.setCellValueFactory(data -> new SimpleStringProperty("0"));
+        
+        colActive.setCellValueFactory(data -> {
+            if (server == null) return new SimpleStringProperty("0");
+            long count = server.getActiveClients().stream()
+                .filter(h -> data.getValue().getExamName().equals(h.getExamName()))
+                .count();
+            return new SimpleStringProperty(String.valueOf(count));
+        });
+        
+        colComplete.setCellValueFactory(data -> {
+            if (db == null) return new SimpleStringProperty("0");
+            try {
+                int count = db.getCompletedCount(data.getValue().getExamName());
+                return new SimpleStringProperty(String.valueOf(count));
+            } catch (Exception e) {
+                return new SimpleStringProperty("0");
+            }
+        });
+
         colStatus.setCellValueFactory(data -> new SimpleStringProperty("Active"));
 
         examTable.setItems(activeExams);
 
         // Start server automatically on port 3000 as shown in Join Exam.fxml
         startServer(3000);
+
+        // Auto-refresh table every 2 seconds
+        javafx.animation.Timeline refreshTimer = new javafx.animation.Timeline(
+            new javafx.animation.KeyFrame(javafx.util.Duration.seconds(2), e -> examTable.refresh())
+        );
+        refreshTimer.setCycleCount(javafx.animation.Timeline.INDEFINITE);
+        refreshTimer.play();
     }
 
     private void startServer(int port) {
@@ -80,6 +104,25 @@ public class ServerController {
     public void addExam(Exam exam) {
         activeExams.add(exam);
         server.addExam(exam);
+    }
+
+    @FXML
+    private void handleViewResults() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/results.fxml"));
+            Parent root = loader.load();
+            
+            ResultsController ctrl = loader.getController();
+            ctrl.initialize(db);
+            
+            Stage stage = new Stage();
+            stage.initModality(Modality.NONE);
+            stage.setTitle("Exam Results");
+            stage.setScene(new Scene(root, 600, 450));
+            stage.show();
+        } catch (Exception e) {
+            showAlert("Failed to open Results window: " + e.getMessage());
+        }
     }
 
     @FXML

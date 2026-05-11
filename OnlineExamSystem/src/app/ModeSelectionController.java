@@ -10,15 +10,19 @@ import javafx.stage.Stage;
 public class ModeSelectionController {
 
     @FXML private Button serverBtn, clientBtn, langBtn;
-    
-    private boolean isArabic = false;
+    @FXML private java.util.ResourceBundle resources;
 
     @FXML
     private void handleToggleLang() {
         try {
-            isArabic = !isArabic;
-            java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Messages", new java.util.Locale(isArabic ? "ar" : "en"));
-            Parent root = FXMLLoader.load(getClass().getResource("/mode_selection.fxml"), bundle);
+            boolean wasArabic = resources.getLocale().getLanguage().equals("ar");
+            java.util.Locale newLocale = wasArabic ? new java.util.Locale("en") : new java.util.Locale("ar");
+            java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Messages", newLocale);
+            
+            // Reload the current window with the new bundle
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mode_selection.fxml"), bundle);
+            Parent root = loader.load();
+            
             Stage stage = (Stage) langBtn.getScene().getWindow();
             stage.setScene(new Scene(root, 500, 250));
         } catch (Exception e) {
@@ -29,12 +33,12 @@ public class ModeSelectionController {
     @FXML
     private void handleStartServer() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/server.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/server.fxml"), resources);
+            Parent root = loader.load();
             Stage stage = new Stage();
-            stage.setTitle("Untitled"); // As shown in the PDF image
+            stage.setTitle("Untitled"); 
             stage.setScene(new Scene(root, 700, 400));
             stage.show();
-            // Close selection window if needed: ((Stage) serverBtn.getScene().getWindow()).close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,7 +47,8 @@ public class ModeSelectionController {
     @FXML
     private void handleJoinExam() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"), resources);
+            Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Join Exam.fxml");
             stage.setScene(new Scene(root, 400, 300));

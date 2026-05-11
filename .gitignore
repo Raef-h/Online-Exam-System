@@ -31,3 +31,7 @@ out_client/
 exam_db.mv.db
 exam_log.txt
 JavaFX/
+OnlineExamSystem/javafx-sdk/
+OnlineExamSystem/out/
+OnlineExamSystem/exam_log.txt
+OnlineExamSystem/exam_db.mv.db

@@ -26,6 +26,11 @@ public class DatabaseManager {
 
     private void createTables() throws SQLException {
         try (Statement s = conn.createStatement()) {
+            // Drop existing tables to avoid saving IDs and data after server close
+            s.execute("DROP TABLE IF EXISTS PROGRESS");
+            s.execute("DROP TABLE IF EXISTS ExamResults");
+            s.execute("DROP TABLE IF EXISTS EXAMS");
+
             s.execute("CREATE TABLE IF NOT EXISTS EXAMS (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
                 "name VARCHAR(255), " +
@@ -116,15 +121,29 @@ public class DatabaseManager {
         }
     }
 
+    public synchronized int getCompletedCount(String examName) throws SQLException {
+        try (PreparedStatement p = conn.prepareStatement(
+                "SELECT COUNT(*) FROM ExamResults WHERE `Course Name`=?")) {
+            p.setString(1, examName);
+            ResultSet rs = p.executeQuery();
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
     public synchronized List<Result> getAllResults() throws SQLException {
         List<Result> list = new ArrayList<>();
         try (Statement s = conn.createStatement();
              ResultSet rs = s.executeQuery("SELECT * FROM ExamResults")) {
             while (rs.next()) {
-                // In a full app, we might join with EXAMS to get exam_id and totalQuestions, but for simplicity:
                 list.add(new Result(
-                    rs.getString("Student ID"), 0,
-                    rs.getString("Course Name"), rs.getInt("Score"), 0));
+                    rs.getString("Student ID"), 
+                    0, // exam_id not directly in ExamResults
+                    rs.getString("Course Name"), 
+                    rs.getString("Year"),
+                    rs.getString("Semester"),
+                    rs.getInt("Score"), 
+                    0  // totalQuestions not directly in ExamResults
+                ));
             }
         }
         return list;
