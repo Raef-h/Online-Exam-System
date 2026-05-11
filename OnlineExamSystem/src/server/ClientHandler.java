@@ -86,8 +86,8 @@ public class ClientHandler implements Runnable {
 
                 Question q = questions.get(currentIndex);
                 QuestionDTO dto;
-                if (q instanceof MCQ) {
-                    MCQ mcq = (MCQ) q;
+                if (q instanceof QuestionMCQ) {
+                    QuestionMCQ mcq = (QuestionMCQ) q;
                     dto = new QuestionDTO("MCQ", mcq.getQuestionText(), currentIndex, totalQuestions);
                     dto.setChoices(mcq.getChoiceA(), mcq.getChoiceB(), mcq.getChoiceC(), mcq.getChoiceD());
                 } else {

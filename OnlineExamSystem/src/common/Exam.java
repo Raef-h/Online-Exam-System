@@ -8,7 +8,7 @@ public class Exam implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int examId;
-    private String examName;
+    private String courseName;
     private String year;
     private String semester;
     private LocalDateTime startDateTime;
@@ -16,9 +16,9 @@ public class Exam implements Serializable {
 
     public Exam() {}
 
-    public Exam(int examId, String examName, String year, String semester, LocalDateTime startDateTime, List<Question> questions) {
+    public Exam(int examId, String courseName, String year, String semester, LocalDateTime startDateTime, List<Question> questions) {
         this.examId = examId;
-        this.examName = examName;
+        this.courseName = courseName;
         this.year = year;
         this.semester = semester;
         this.startDateTime = startDateTime;
@@ -27,8 +27,9 @@ public class Exam implements Serializable {
 
     public int getExamId() { return examId; }
     public void setExamId(int id) { this.examId = id; }
-    public String getExamName() { return examName; }
-    public void setExamName(String n) { this.examName = n; }
+    public String getCourseName() { return courseName; }
+    public void setCourseName(String n) { this.courseName = n; }
+    public String getExamName() { return courseName; } // Keep for backward compatibility if needed
     public String getYear() { return year; }
     public void setYear(String year) { this.year = year; }
     public String getSemester() { return semester; }

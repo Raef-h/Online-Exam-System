@@ -46,8 +46,8 @@ public class NewExamController {
             importedQuestions = parseQuestionFile(file);
             int mcq = 0, tf = 0;
             for (Question q : importedQuestions) {
-                if (q instanceof MCQ) mcq++;
-                else tf++;
+                if (q instanceof QuestionMCQ) mcq++;
+                else if (q instanceof QuestionTF) tf++;
             }
             mcqLabel.setText("MCQ: " + mcq);
             tfLabel.setText("TF: " + tf);
@@ -69,6 +69,7 @@ public class NewExamController {
             return;
         }
 
+        // Exam name is combined in the constructor or we can keep them separate
         Exam exam = new Exam(0, courseName, year, semester, LocalDateTime.now(), importedQuestions);
         try {
             if (db == null) {
@@ -97,24 +98,54 @@ public class NewExamController {
         List<Question> list = new ArrayList<>();
         try {
             List<String> lines = Files.readAllLines(file.toPath());
-            int i = 0;
-            while (i < lines.size()) {
-                String type = lines.get(i++).trim();
-                if (type.isEmpty()) continue;
-                String text = lines.get(i++).trim();
-                String ans = lines.get(i++).trim();
-                if (type.equalsIgnoreCase("MCQ")) {
-                    String a = lines.get(i++).trim();
-                    String b = lines.get(i++).trim();
-                    String c = lines.get(i++).trim();
-                    String d = lines.get(i++).trim();
-                    list.add(new MCQ(text, ans, a, b, c, d));
-                } else if (type.equalsIgnoreCase("TF")) {
-                    list.add(new TF(text, ans));
+            int lineNum = 0;
+            for (String line : lines) {
+                lineNum++;
+                line = line.trim();
+                if (line.isEmpty()) continue;
+                String[] parts = line.split(";");
+                
+                String type = parts[0].trim();
+                if (type.equalsIgnoreCase("TF")) {
+                    if (parts.length < 3) {
+                        System.err.println("Line " + lineNum + ": Invalid TF format. Expected TF;Text;Answer");
+                        continue;
+                    }
+                    String text = parts[1].trim();
+                    String ans = parts[2].trim(); // TRUE or FALSE
+                    list.add(new QuestionTF(text, ans.equalsIgnoreCase("TRUE")));
+                } else if (type.equalsIgnoreCase("MCQ")) {
+                    // PDF Format: MCQ;Text;C1;M1;C2;M2;C3;M3;C4;M4
+                    if (parts.length < 10) {
+                        System.err.println("Line " + lineNum + ": Invalid MCQ format. Expected 10 semicolon-separated parts.");
+                        continue;
+                    }
+                    String text = parts[1].trim();
+                    String c1 = parts[2].trim();
+                    String m1 = parts[3].trim();
+                    String c2 = parts[4].trim();
+                    String m2 = parts[5].trim();
+                    String c3 = parts[6].trim();
+                    String m3 = parts[7].trim();
+                    String c4 = parts[8].trim();
+                    String m4 = parts[9].trim();
+
+                    list.add(new QuestionMCQ(text, 
+                        c1, m1.equalsIgnoreCase("CORRECT"),
+                        c2, m2.equalsIgnoreCase("CORRECT"),
+                        c3, m3.equalsIgnoreCase("CORRECT"),
+                        c4, m4.equalsIgnoreCase("CORRECT")
+                    ));
+                } else {
+                    System.err.println("Line " + lineNum + ": Unknown question type: " + type);
                 }
             }
         } catch (Exception e) {
             errorLabel.setText("Error reading file: " + e.getMessage());
+            e.printStackTrace();
+        }
+        if (list.isEmpty()) {
+            errorLabel.setText("No valid questions found. Check console for details.");
         }
         return list;
     }

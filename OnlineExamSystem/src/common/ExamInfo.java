@@ -7,26 +7,27 @@ public class ExamInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int examId;
-    private String examName;
+    private String courseName;
     private LocalDateTime startDateTime;
     private int questionCount;
 
     public ExamInfo() {}
 
-    public ExamInfo(int examId, String examName, LocalDateTime startDateTime, int questionCount) {
+    public ExamInfo(int examId, String courseName, LocalDateTime startDateTime, int questionCount) {
         this.examId = examId;
-        this.examName = examName;
+        this.courseName = courseName;
         this.startDateTime = startDateTime;
         this.questionCount = questionCount;
     }
 
     public int getExamId() { return examId; }
-    public String getExamName() { return examName; }
+    public String getCourseName() { return courseName; }
+    public String getExamName() { return courseName; }
     public LocalDateTime getStartDateTime() { return startDateTime; }
     public int getQuestionCount() { return questionCount; }
 
     @Override
     public String toString() {
-        return examName + "  [" + questionCount + " questions]";
+        return courseName + "  [" + questionCount + " questions]";
     }
 }

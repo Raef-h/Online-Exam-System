@@ -37,7 +37,10 @@ public class ServerController {
             showAlert("DB Error: " + e.getMessage());
         }
 
-        colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getExamName()));
+        colName.setCellValueFactory(data -> {
+            Exam e = data.getValue();
+            return new SimpleStringProperty(e.getExamName() + " " + e.getSemester() + " " + e.getYear());
+        });
         colTime.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getStartDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
         
@@ -59,7 +62,10 @@ public class ServerController {
             }
         });
 
-        colStatus.setCellValueFactory(data -> new SimpleStringProperty("Active"));
+        colStatus.setCellValueFactory(data -> {
+            long minutes = java.time.Duration.between(data.getValue().getStartDateTime(), java.time.LocalDateTime.now()).toMinutes();
+            return new SimpleStringProperty(minutes < 60 ? "Active" : "Ended");
+        });
 
         examTable.setItems(activeExams);
 

@@ -7,7 +7,7 @@ public class Result implements Serializable {
 
     private String studentName;
     private int examId;
-    private String examName;
+    private String courseName;
     private String year;
     private String semester;
     private int score;
@@ -15,10 +15,10 @@ public class Result implements Serializable {
 
     public Result() {}
 
-    public Result(String studentName, int examId, String examName, String year, String semester, int score, int totalQuestions) {
+    public Result(String studentName, int examId, String courseName, String year, String semester, int score, int totalQuestions) {
         this.studentName = studentName;
         this.examId = examId;
-        this.examName = examName;
+        this.courseName = courseName;
         this.year = year;
         this.semester = semester;
         this.score = score;
@@ -27,7 +27,8 @@ public class Result implements Serializable {
 
     public String getStudentName() { return studentName; }
     public int getExamId() { return examId; }
-    public String getExamName() { return examName; }
+    public String getCourseName() { return courseName; }
+    public String getExamName() { return courseName; }
     public String getYear() { return year; }
     public String getSemester() { return semester; }
     public int getScore() { return score; }
@@ -35,7 +36,8 @@ public class Result implements Serializable {
 
     public void setStudentName(String s) { studentName = s; }
     public void setExamId(int i) { examId = i; }
-    public void setExamName(String s) { examName = s; }
+    public void setCourseName(String s) { courseName = s; }
+    public void setExamName(String s) { courseName = s; }
     public void setYear(String y) { year = y; }
     public void setSemester(String s) { semester = s; }
     public void setScore(int s) { score = s; }
