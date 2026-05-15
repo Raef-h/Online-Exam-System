@@ -4,6 +4,7 @@ import common.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.io.*;
 
 public class DatabaseManager {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/";
@@ -22,6 +23,15 @@ public class DatabaseManager {
         // Connect to the specific database
         conn = DriverManager.getConnection(DB_URL + DB_NAME, USER, PASS);
         createTables();
+        clearSession();
+    }
+
+    private void clearSession() throws SQLException {
+        try (Statement s = conn.createStatement()) {
+            s.execute("DELETE FROM EXAMS");
+            s.execute("DELETE FROM PROGRESS");
+            s.execute("DELETE FROM ExamResults");
+        }
     }
 
     private void createTables() throws SQLException {
@@ -34,7 +44,8 @@ public class DatabaseManager {
                 "`year` VARCHAR(255), " +
                 "`semester` VARCHAR(255), " +
                 "start_time TIMESTAMP, " +
-                "question_count INT)");
+                "question_count INT, " +
+                "questions_blob LONGBLOB)");
 
             s.execute("CREATE TABLE IF NOT EXISTS ExamResults (" +
                 "ID INT AUTO_INCREMENT PRIMARY KEY, " +
@@ -51,23 +62,67 @@ public class DatabaseManager {
                 "current_question INT DEFAULT 0, " +
                 "current_score INT DEFAULT 0, " +
                 "UNIQUE(student_name, exam_id))");
+
+            // Safety: Add column if it doesn't exist (for existing databases)
+            try {
+                s.execute("ALTER TABLE EXAMS ADD COLUMN questions_blob LONGBLOB");
+            } catch (SQLException ignored) {} 
         }
     }
 
     public synchronized int saveExam(Exam exam) throws SQLException {
         try (PreparedStatement p = conn.prepareStatement(
-                "INSERT INTO EXAMS (`name`, `year`, `semester`, start_time, question_count) VALUES (?,?,?,?,?)",
+                "INSERT INTO EXAMS (`name`, `year`, `semester`, start_time, question_count, questions_blob) VALUES (?,?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS)) {
             p.setString(1, exam.getExamName());
             p.setString(2, exam.getYear());
             p.setString(3, exam.getSemester());
             p.setTimestamp(4, Timestamp.valueOf(exam.getStartDateTime()));
             p.setInt(5, exam.getQuestions().size());
+            
+            // Serialize questions to blob
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                 ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+                oos.writeObject(exam.getQuestions());
+                p.setBytes(6, baos.toByteArray());
+            } catch (IOException e) {
+                throw new SQLException("Serialization failed", e);
+            }
+
             p.executeUpdate();
             try (ResultSet rs = p.getGeneratedKeys()) {
                 return rs.next() ? rs.getInt(1) : -1;
             }
         }
+    }
+
+    public synchronized List<Exam> getAllExams() throws SQLException {
+        List<Exam> list = new ArrayList<>();
+        try (Statement s = conn.createStatement();
+             ResultSet rs = s.executeQuery("SELECT * FROM EXAMS")) {
+            while (rs.next()) {
+                Exam e = new Exam();
+                e.setCourseName(rs.getString("name"));
+                e.setYear(rs.getString("year"));
+                e.setSemester(rs.getString("semester"));
+                e.setExamId(rs.getInt("id"));
+                e.setStartDateTime(rs.getTimestamp("start_time").toLocalDateTime());
+                
+                byte[] blob = rs.getBytes("questions_blob");
+                if (blob != null) {
+                    try (ByteArrayInputStream bais = new ByteArrayInputStream(blob);
+                         ObjectInputStream ois = new ObjectInputStream(bais)) {
+                        @SuppressWarnings("unchecked")
+                        List<Question> questions = (List<Question>) ois.readObject();
+                        e.setQuestions(questions);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to load questions for exam " + e.getExamId());
+                    }
+                }
+                list.add(e);
+            }
+        }
+        return list;
     }
 
     public synchronized void saveResult(Result result, Exam exam) throws SQLException {

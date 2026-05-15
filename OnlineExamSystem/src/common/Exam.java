@@ -12,7 +12,7 @@ public class Exam implements Serializable {
     private String year;
     private String semester;
     private LocalDateTime startDateTime;
-    private List<Question> questions;
+    private List<Question> questions = new java.util.ArrayList<>();
 
     public Exam() {}
 

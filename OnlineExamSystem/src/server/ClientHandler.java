@@ -75,6 +75,11 @@ public class ClientHandler implements Runnable {
             
             List<Question> questions = selectedExam.getQuestions();
             totalQuestions = questions.size();
+            
+            if (totalQuestions == 0) {
+                sendError("This exam has no questions. Please create a NEW exam in the server window.");
+                return;
+            }
 
             while (currentIndex < totalQuestions) {
                 // Check if time expired

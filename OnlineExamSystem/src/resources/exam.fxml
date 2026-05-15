@@ -8,7 +8,12 @@
       alignment="CENTER" spacing="30">
     <padding><Insets top="50" right="50" bottom="50" left="50"/></padding>
 
-    <Label fx:id="questionLabel" text="Question text here" wrapText="true" maxWidth="400"/>
+    <HBox spacing="100" alignment="CENTER">
+        <Label fx:id="counterLabel" text="Question 0/0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="timerLabel" text="Time Left: 00:00" style="-fx-text-fill: #e74c3c; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <Label fx:id="questionLabel" text="Question text here" wrapText="true" maxWidth="400" style="-fx-font-size: 14px;"/>
 
     <VBox fx:id="mcqBox" spacing="10" alignment="CENTER_LEFT" maxWidth="200">
         <RadioButton fx:id="rbA" text="Choice A"/>

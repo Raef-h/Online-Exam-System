@@ -13,12 +13,15 @@ import java.util.ResourceBundle;
 
 public class ExamController {
 
-    @FXML private Label questionLabel;
+    @FXML private Label questionLabel, timerLabel, counterLabel;
     @FXML private RadioButton rbA, rbB, rbC, rbD, rbTrue, rbFalse;
     @FXML private VBox mcqBox, tfBox;
     @FXML private Button nextBtn;
     @FXML private Label errorLabel;
     @FXML private ResourceBundle resources;
+    
+    private javafx.animation.Timeline timerTimeline;
+    private java.time.LocalDateTime examStartTime;
     
     private ToggleGroup mcqGroup, tfGroup;
 
@@ -46,7 +49,29 @@ public class ExamController {
         rbTrue.setToggleGroup(tfGroup);
         rbFalse.setToggleGroup(tfGroup);
 
+        this.examStartTime = exam.getStartDateTime();
+        startTimer();
+
         new Thread(this::listenForMessages).start();
+    }
+    
+    private void startTimer() {
+        timerTimeline = new javafx.animation.Timeline(new javafx.animation.KeyFrame(javafx.util.Duration.seconds(1), e -> {
+            java.time.Duration elapsed = java.time.Duration.between(examStartTime, java.time.LocalDateTime.now());
+            long remaining = 3600 - elapsed.getSeconds(); // 60 minutes
+            
+            if (remaining <= 0) {
+                timerLabel.setText("Time Left: 00:00");
+                timerTimeline.stop();
+                return;
+            }
+            
+            long mins = remaining / 60;
+            long secs = remaining % 60;
+            timerLabel.setText(String.format("Time Left: %02d:%02d", mins, secs));
+        }));
+        timerTimeline.setCycleCount(javafx.animation.Timeline.INDEFINITE);
+        timerTimeline.play();
     }
 
     private void listenForMessages() {
@@ -76,6 +101,7 @@ public class ExamController {
         this.currentQuestion = dto;
         nextBtn.setDisable(false);
 
+        counterLabel.setText("Question " + (dto.getQuestionIndex() + 1) + "/" + dto.getTotalQuestions());
         questionLabel.setText(dto.getText());
 
         if ("MCQ".equals(dto.getType())) {
@@ -129,6 +155,7 @@ public class ExamController {
         alert.setHeaderText("Hello, " + studentName);
         alert.showAndWait();
         
+        if (timerTimeline != null) timerTimeline.stop();
         try { socket.close(); } catch (Exception ignored) {}
         ((Stage) nextBtn.getScene().getWindow()).close();
     }
