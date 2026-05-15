@@ -1,0 +1,35 @@
+PROJECT CONTRIBUTIONS SUMMARY
+==============================
+
+Student Name: Raef Alharbi
+Project: Online Exam System
+
+This document summarizes the key features and technical tasks implemented during the development of the Online Exam System.
+
+--------------------------------------------------------------------------------
+1. CORE FEATURES IMPLEMENTED
+--------------------------------------------------------------------------------
+- MULTI-THREADED NETWORKING: Developed a robust server capable of handling multiple concurrent student connections using Java Sockets.
+- FLEXIBLE EXAM ENGINE: Implemented support for both Multiple Choice (MCQ) and True/False (TF) questions with automated grading.
+- DATABASE INTEGRATION: Integrated MySQL (via XAMPP) to handle persistence. Designed the 'ExamResults' and 'EXAMS' tables according to academic specifications.
+- DYNAMIC QUESTION IMPORT: Created a parsing system for semicolon-separated text files (TF;... and MCQ;...) for automated exam creation.
+- STUDENT PROGRESS TRACKING: Implemented a progress-saving feature that allows students to resume exams and prevents duplicate submissions.
+- ARABIC & ENGLISH SUPPORT: Developed a localization system allowing users to toggle between English and Arabic interfaces seamlessly.
+
+--------------------------------------------------------------------------------
+2. TECHNICAL TASKS COMPLETED
+--------------------------------------------------------------------------------
+- ARCHITECTURAL REFACTORING: Optimized the project structure by unifying entry points and removing redundant controllers (Monitor/Results).
+- ACADEMIC COMPLIANCE: Renamed all core classes (QuestionTF, QuestionMCQ) and table columns to strictly match the project requirements PDF.
+- BUG FIXING & STABILIZATION: Resolved critical SQL reserved keyword errors (Year/Semester) and fixed database resource leaks.
+- UI/UX ENHANCEMENTS: Designed a modern JavaFX interface using CSS for a professional look and feel. Adjusted screen scaling for better readability.
+- BUILD AUTOMATION: Configured the 'run.bat' script to automate the complex compilation of JavaFX modules and external SQL drivers.
+
+--------------------------------------------------------------------------------
+3. TOOLS & TECHNOLOGIES USED
+--------------------------------------------------------------------------------
+- Language: Java 21
+- UI Framework: JavaFX (FXML & CSS)
+- Database: MySQL (XAMPP / phpMyAdmin)
+- Build System: Batch Scripting (run.bat)
+- Architecture: MVC (Model-View-Controller)
