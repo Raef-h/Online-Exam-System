@@ -1,8 +1,0 @@
-MCQ;What is the correct syntax to output "Hello World" in Java?;System.out.println("Hello World");CORRECT;print("Hello World");INCORRECT;Console.WriteLine("Hello World");INCORRECT;echo("Hello World");INCORRECT
-TF;Java is a compiled language that runs on the JVM.;TRUE
-MCQ;Which data type is used to create a variable that should store text?;String;CORRECT;Txt;INCORRECT;str;INCORRECT;string;INCORRECT
-TF;The 'final' keyword in Java is used to create a constant variable.;TRUE
-MCQ;How do you create a method in Java?;methodName();CORRECT;(methodName);INCORRECT;methodName[];INCORRECT;methodName{};INCORRECT
-TF;An interface in Java can contain concrete methods starting from Java 8.;TRUE
-MCQ;Which operator is used to add together two values?;The + sign;CORRECT;The * sign;INCORRECT;The & sign;INCORRECT;The # sign;INCORRECT
-TF;The 'default' case is mandatory in a switch statement.;FALSE
