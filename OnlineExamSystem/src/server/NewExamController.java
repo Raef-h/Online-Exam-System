@@ -30,8 +30,13 @@ public class NewExamController {
         this.db = db;
         this.parent = parent;
         
-        yearCombo.getItems().addAll("2024", "2025", "2026", "2027");
-        yearCombo.setValue("2026");
+        int currentYear = java.time.LocalDate.now().getYear();
+        yearCombo.getItems().addAll(
+            String.valueOf(currentYear - 2),
+            String.valueOf(currentYear - 1),
+            String.valueOf(currentYear)
+        );
+        yearCombo.setValue(String.valueOf(currentYear));
         
         semesterCombo.getItems().addAll("Fall", "Spring", "Summer");
         semesterCombo.setValue("Spring");
@@ -79,6 +84,7 @@ public class NewExamController {
             int id = db.saveExam(exam);
             exam.setExamId(id);
             parent.addExam(exam);
+            LogManager.log("EXAM_CREATED: " + courseName + " (" + semester + " " + year + ") with " + importedQuestions.size() + " questions");
             ((Stage) courseNameField.getScene().getWindow()).close();
         } catch (Exception e) {
             errorLabel.setText("DB Error: " + e.getMessage());

@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 
 public class ExamListController {
 
-    @FXML private ComboBox<String> examCombo;
+    @FXML private ChoiceBox<String> examCombo;
     @FXML private Button takeExamBtn;
     @FXML private Label errorLabel;
     @FXML private ResourceBundle resources;
@@ -41,7 +41,7 @@ public class ExamListController {
         }
         
         if (!exams.isEmpty()) {
-            examCombo.getSelectionModel().selectFirst();
+            examCombo.setValue(examCombo.getItems().get(0));
         } else {
             String noExamsMsg = resources != null ? resources.getString("msg.no_exams") : "No active exams available.";
             errorLabel.setText(noExamsMsg);
@@ -51,7 +51,7 @@ public class ExamListController {
 
     @FXML
     private void handleTakeExam() {
-        int idx = examCombo.getSelectionModel().getSelectedIndex();
+        int idx = examCombo.getItems().indexOf(examCombo.getValue());
         if (idx < 0) {
             errorLabel.setText("Please select an exam.");
             return;
