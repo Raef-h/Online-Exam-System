@@ -10,9 +10,7 @@
         <Menu text="New Exam">
             <MenuItem text="Create New Exam" onAction="#handleNewExamMenu"/>
         </Menu>
-        <Menu text="Results">
-            <MenuItem text="View All Results" onAction="#handleViewResults"/>
-        </Menu>
+
         <Menu text="Help">
             <MenuItem text="About" onAction="#handleHelp"/>
         </Menu>

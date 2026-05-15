@@ -8,14 +8,14 @@ public class QuestionTF extends Question {
     public QuestionTF() {}
 
     public QuestionTF(String questionText, boolean answer) {
-        super(questionText, answer ? "True" : "False");
+        super(questionText, answer ? "TRUE" : "FALSE");
         this.answer = answer;
     }
 
     public boolean isAnswer() { return answer; }
     public void setAnswer(boolean b) { 
         this.answer = b; 
-        setCorrectAnswer(b ? "True" : "False");
+        setCorrectAnswer(b ? "TRUE" : "FALSE");
     }
 
     @Override public String getType() { return "TF"; }

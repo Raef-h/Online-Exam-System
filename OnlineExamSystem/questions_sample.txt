@@ -1,5 +1,0 @@
-MCQ;What does OOP stand for?;Object-Oriented Programming;CORRECT;Object-Oriented Process;INCORRECT;Online Object Programming;INCORRECT;Operational Object Paradigm;INCORRECT
-TF;Java is a compiled language that runs on the JVM.;TRUE
-MCQ;Which keyword is used to inherit a class in Java?;implements;INCORRECT;inherits;INCORRECT;extends;CORRECT;super;INCORRECT
-TF;A constructor can have a return type in Java.;FALSE
-MCQ;Which collection is used to store key-value pairs?;ArrayList;INCORRECT;HashSet;INCORRECT;HashMap;CORRECT;LinkedList;INCORRECT

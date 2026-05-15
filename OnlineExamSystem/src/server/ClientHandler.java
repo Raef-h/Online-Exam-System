@@ -141,7 +141,7 @@ public class ClientHandler implements Runnable {
             for (Exam e : activeExams) {
                 long minutes = java.time.Duration.between(e.getStartDateTime(), java.time.LocalDateTime.now()).toMinutes();
                 if (minutes < 60) {
-                    list.add(new ExamInfo(e.getExamId(), e.getExamName(),
+                    list.add(new ExamInfo(e.getExamId(), e.getExamName(), e.getYear(), e.getSemester(),
                                           e.getStartDateTime(), e.getQuestions().size()));
                 }
             }

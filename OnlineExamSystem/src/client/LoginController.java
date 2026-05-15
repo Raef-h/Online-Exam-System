@@ -11,12 +11,14 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class LoginController {
 
     @FXML private TextField nameField, ipField, portField;
     @FXML private Button connectBtn;
     @FXML private Label errorLabel;
+    @FXML private ResourceBundle resources;
 
     @FXML
     private void handleConnect() {
@@ -60,13 +62,13 @@ public class LoginController {
 
                 Platform.runLater(() -> {
                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/examlist.fxml"));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/examlist.fxml"), resources);
                         VBox root = loader.load();
                         ExamListController ctrl = loader.getController();
                         ctrl.initialize(name, socket, in, out, exams, false);
 
                         Stage stage = (Stage) connectBtn.getScene().getWindow();
-                        Scene scene = new Scene(root, 400, 200);
+                        Scene scene = new Scene(root, 450, 300);
                         stage.setScene(scene);
                         stage.setTitle("Exam Selection.fxml");
                     } catch (Exception ex) {

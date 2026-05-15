@@ -112,24 +112,7 @@ public class ServerController {
         server.addExam(exam);
     }
 
-    @FXML
-    private void handleViewResults() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/results.fxml"));
-            Parent root = loader.load();
-            
-            ResultsController ctrl = loader.getController();
-            ctrl.initialize(db);
-            
-            Stage stage = new Stage();
-            stage.initModality(Modality.NONE);
-            stage.setTitle("Exam Results");
-            stage.setScene(new Scene(root, 600, 450));
-            stage.show();
-        } catch (Exception e) {
-            showAlert("Failed to open Results window: " + e.getMessage());
-        }
-    }
+
 
     @FXML
     private void handleHelp() {

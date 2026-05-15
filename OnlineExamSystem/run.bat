@@ -4,8 +4,8 @@ set JAVAFX=javafx-sdk\lib
 set MODS=javafx.controls,javafx.fxml
 set H2=lib\h2-2.2.224.jar;lib\mysql-connector-j-8.4.0.jar
 
-set SRC_COMMON=src\common\Question.java src\common\QuestionDTO.java src\common\QuestionMCQ.java src\common\QuestionTF.java src\common\Exam.java src\common\ExamInfo.java src\common\Result.java src\common\Message.java src\common\StudentProgress.java
-set SRC_SERVER=src\server\LogManager.java src\server\DatabaseManager.java src\server\ClientHandler.java src\server\ExamServer.java src\server\MonitorController.java src\server\ServerController.java src\server\NewExamController.java src\server\ResultsController.java
+set SRC_COMMON=src\common\Question.java src\common\QuestionDTO.java src\common\QuestionMCQ.java src\common\QuestionTF.java src\common\Exam.java src\common\ExamInfo.java src\common\Result.java src\common\Message.java
+set SRC_SERVER=src\server\LogManager.java src\server\DatabaseManager.java src\server\ClientHandler.java src\server\ExamServer.java src\server\ServerController.java src\server\NewExamController.java
 set SRC_CLIENT=src\client\LoginController.java src\client\ExamListController.java src\client\ExamController.java
 set SRC_APP=src\app\MainApp.java src\app\ModeSelectionController.java
 

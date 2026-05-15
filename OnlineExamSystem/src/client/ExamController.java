@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ResourceBundle;
 
 public class ExamController {
 
@@ -17,6 +18,7 @@ public class ExamController {
     @FXML private VBox mcqBox, tfBox;
     @FXML private Button nextBtn;
     @FXML private Label errorLabel;
+    @FXML private ResourceBundle resources;
     
     private ToggleGroup mcqGroup, tfGroup;
 
@@ -119,6 +121,9 @@ public class ExamController {
 
     private void showResultDialog(Result result) {
         String msg = "🎉 Exam Complete!\n\nScore: " + result.getScore() + " / " + result.getTotalQuestions();
+        if (resources != null && resources.getLocale().getLanguage().equals("ar")) {
+            msg = "🎉 اكتمل الامتحان!\n\nالدرجة: " + result.getScore() + " / " + result.getTotalQuestions();
+        }
         Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
         alert.setTitle("Final Result");
         alert.setHeaderText("Hello, " + studentName);

@@ -11,12 +11,14 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class ExamListController {
 
     @FXML private ComboBox<String> examCombo;
     @FXML private Button takeExamBtn;
     @FXML private Label errorLabel;
+    @FXML private ResourceBundle resources;
 
     private String studentName;
     private Socket socket;
@@ -34,13 +36,15 @@ public class ExamListController {
         this.exams = exams;
 
         for (ExamInfo e : exams) {
-            examCombo.getItems().add(e.getExamName());
+            String displayName = e.getCourseName() + " - " + e.getYear() + " - " + e.getSemester();
+            examCombo.getItems().add(displayName);
         }
         
         if (!exams.isEmpty()) {
             examCombo.getSelectionModel().selectFirst();
         } else {
-            errorLabel.setText("No active exams available.");
+            String noExamsMsg = resources != null ? resources.getString("msg.no_exams") : "No active exams available.";
+            errorLabel.setText(noExamsMsg);
             takeExamBtn.setDisable(true);
         }
     }
@@ -75,13 +79,13 @@ public class ExamListController {
 
                 Platform.runLater(() -> {
                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/exam.fxml"));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/exam.fxml"), resources);
                         VBox root = loader.load();
                         ExamController ctrl = loader.getController();
                         ctrl.initialize(studentName, socket, in, out, exam, false);
 
                         Stage stage = (Stage) takeExamBtn.getScene().getWindow();
-                        Scene scene = new Scene(root, 400, 300);
+                        Scene scene = new Scene(root, 500, 450);
                         stage.setScene(scene);
                         stage.setTitle("Exam.fxml");
                     } catch (Exception ex) {

@@ -26,16 +26,13 @@ public class DatabaseManager {
 
     private void createTables() throws SQLException {
         try (Statement s = conn.createStatement()) {
-            // Drop existing tables to avoid saving IDs and data after server close
-            s.execute("DROP TABLE IF EXISTS PROGRESS");
-            s.execute("DROP TABLE IF EXISTS ExamResults");
-            s.execute("DROP TABLE IF EXISTS EXAMS");
+
 
             s.execute("CREATE TABLE IF NOT EXISTS EXAMS (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                "name VARCHAR(255), " +
-                "year VARCHAR(255), " +
-                "semester VARCHAR(255), " +
+                "`name` VARCHAR(255), " +
+                "`year` VARCHAR(255), " +
+                "`semester` VARCHAR(255), " +
                 "start_time TIMESTAMP, " +
                 "question_count INT)");
 
@@ -43,9 +40,9 @@ public class DatabaseManager {
                 "ID INT AUTO_INCREMENT PRIMARY KEY, " +
                 "`Student ID` VARCHAR(255), " +
                 "`Course Name` VARCHAR(255), " +
-                "Year VARCHAR(255), " +
-                "Semester VARCHAR(255), " +
-                "Score INT)");
+                "`Year` VARCHAR(255), " +
+                "`Semester` VARCHAR(255), " +
+                "`Score` INT)");
 
             s.execute("CREATE TABLE IF NOT EXISTS PROGRESS (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
@@ -59,7 +56,7 @@ public class DatabaseManager {
 
     public synchronized int saveExam(Exam exam) throws SQLException {
         try (PreparedStatement p = conn.prepareStatement(
-                "INSERT INTO EXAMS (name, year, semester, start_time, question_count) VALUES (?,?,?,?,?)",
+                "INSERT INTO EXAMS (`name`, `year`, `semester`, start_time, question_count) VALUES (?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS)) {
             p.setString(1, exam.getExamName());
             p.setString(2, exam.getYear());
@@ -67,14 +64,15 @@ public class DatabaseManager {
             p.setTimestamp(4, Timestamp.valueOf(exam.getStartDateTime()));
             p.setInt(5, exam.getQuestions().size());
             p.executeUpdate();
-            ResultSet rs = p.getGeneratedKeys();
-            return rs.next() ? rs.getInt(1) : -1;
+            try (ResultSet rs = p.getGeneratedKeys()) {
+                return rs.next() ? rs.getInt(1) : -1;
+            }
         }
     }
 
     public synchronized void saveResult(Result result, Exam exam) throws SQLException {
         try (PreparedStatement p = conn.prepareStatement(
-                "INSERT INTO ExamResults (`Student ID`, `Course Name`, Year, Semester, Score) VALUES(?,?,?,?,?)")) {
+                "INSERT INTO ExamResults (`Student ID`, `Course Name`, `Year`, `Semester`, `Score`) VALUES(?,?,?,?,?)")) {
             p.setString(1, result.getStudentName());
             p.setString(2, exam.getExamName());
             p.setString(3, exam.getYear());
@@ -103,9 +101,10 @@ public class DatabaseManager {
                 "SELECT current_question, current_score FROM PROGRESS WHERE student_name=? AND exam_id=?")) {
             p.setString(1, studentName);
             p.setInt(2, examId);
-            ResultSet rs = p.executeQuery();
-            if (rs.next()) {
-                return new int[]{rs.getInt(1), rs.getInt(2)};
+            try (ResultSet rs = p.executeQuery()) {
+                if (rs.next()) {
+                    return new int[]{rs.getInt(1), rs.getInt(2)};
+                }
             }
             return new int[]{0, 0};
         }
@@ -116,8 +115,9 @@ public class DatabaseManager {
                 "SELECT COUNT(*) FROM ExamResults WHERE `Student ID`=? AND `Course Name`=(SELECT name FROM EXAMS WHERE id=?)")) {
             p.setString(1, studentName);
             p.setInt(2, examId);
-            ResultSet rs = p.executeQuery();
-            return rs.next() && rs.getInt(1) > 0;
+            try (ResultSet rs = p.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
         }
     }
 
@@ -125,29 +125,13 @@ public class DatabaseManager {
         try (PreparedStatement p = conn.prepareStatement(
                 "SELECT COUNT(*) FROM ExamResults WHERE `Course Name`=?")) {
             p.setString(1, examName);
-            ResultSet rs = p.executeQuery();
-            return rs.next() ? rs.getInt(1) : 0;
+            try (ResultSet rs = p.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
         }
     }
 
-    public synchronized List<Result> getAllResults() throws SQLException {
-        List<Result> list = new ArrayList<>();
-        try (Statement s = conn.createStatement();
-             ResultSet rs = s.executeQuery("SELECT * FROM ExamResults")) {
-            while (rs.next()) {
-                list.add(new Result(
-                    rs.getString("Student ID"), 
-                    0, // exam_id not directly in ExamResults
-                    rs.getString("Course Name"), 
-                    rs.getString("Year"),
-                    rs.getString("Semester"),
-                    rs.getInt("Score"), 
-                    0  // totalQuestions not directly in ExamResults
-                ));
-            }
-        }
-        return list;
-    }
+
 
     public void close() {
         try { if (conn != null && !conn.isClosed()) conn.close(); }

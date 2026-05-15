@@ -36,7 +36,7 @@ public class ModeSelectionController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/server.fxml"), resources);
             Parent root = loader.load();
             Stage stage = new Stage();
-            stage.setTitle("Untitled"); 
+            stage.setTitle("server.fxml"); 
             stage.setScene(new Scene(root, 700, 400));
             stage.show();
         } catch (Exception e) {
