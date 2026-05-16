@@ -11,7 +11,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Messages", new java.util.Locale("en"));
         Parent root = FXMLLoader.load(getClass().getResource("/mode_selection.fxml"), bundle);
-        primaryStage.setTitle("mode_selection.fxml"); // As shown in the PDF image
+        primaryStage.setTitle("mode_selection.fxml");
         primaryStage.setScene(new Scene(root, 500, 250));
         primaryStage.show();
     }

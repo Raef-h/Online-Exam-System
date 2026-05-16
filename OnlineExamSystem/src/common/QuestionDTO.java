@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class QuestionDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String type; // "TF" or "MCQ"
+    private String type;
     private String text;
     private String choiceA, choiceB, choiceC, choiceD;
     private int questionIndex;
@@ -23,7 +23,6 @@ public class QuestionDTO implements Serializable {
     public int getQuestionIndex() { return questionIndex; }
     public int getTotalQuestions() { return totalQuestions; }
 
-    // For MCQ
     public void setChoices(String a, String b, String c, String d) {
         this.choiceA = a;
         this.choiceB = b;

@@ -16,7 +16,7 @@ public class QuestionMCQ extends Question {
 
     public QuestionMCQ(String questionText, String c1, boolean c1c, String c2, boolean c2c, 
                       String c3, boolean c3c, String c4, boolean c4c) {
-        super(questionText, ""); // Parent's correctAnswer will be set below
+        super(questionText, "");
         this.choice1 = c1;
         this.choice1Correct = c1c;
         this.choice2 = c2;
@@ -54,7 +54,6 @@ public class QuestionMCQ extends Question {
     public boolean isChoice4Correct() { return choice4Correct; }
     public void setChoice4Correct(boolean b) { choice4Correct = b; }
 
-    // Backward compatibility for controllers
     public String getChoiceA() { return choice1; }
     public String getChoiceB() { return choice2; }
     public String getChoiceC() { return choice3; }

@@ -58,7 +58,7 @@ public class ExamController {
     private void startTimer() {
         timerTimeline = new javafx.animation.Timeline(new javafx.animation.KeyFrame(javafx.util.Duration.seconds(1), e -> {
             java.time.Duration elapsed = java.time.Duration.between(examStartTime, java.time.LocalDateTime.now());
-            long remaining = 3600 - elapsed.getSeconds(); // 60 minutes
+            long remaining = 3600 - elapsed.getSeconds();
             
             if (remaining <= 0) {
                 timerLabel.setText("Time Left: 00:00");
@@ -91,7 +91,6 @@ public class ExamController {
                 }
             }
         } catch (EOFException e) {
-            // Server disconnected
         } catch (Exception e) {
             Platform.runLater(() -> showError("Connection error: " + e.getMessage()));
         }

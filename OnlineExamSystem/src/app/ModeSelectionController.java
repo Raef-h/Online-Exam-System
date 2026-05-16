@@ -19,7 +19,6 @@ public class ModeSelectionController {
             java.util.Locale newLocale = wasArabic ? new java.util.Locale("en") : new java.util.Locale("ar");
             java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Messages", newLocale);
             
-            // Reload the current window with the new bundle
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/mode_selection.fxml"), bundle);
             Parent root = loader.load();
             

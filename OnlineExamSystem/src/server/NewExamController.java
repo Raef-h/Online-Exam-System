@@ -74,7 +74,6 @@ public class NewExamController {
             return;
         }
 
-        // Exam name is combined in the constructor or we can keep them separate
         Exam exam = new Exam(0, courseName, year, semester, LocalDateTime.now(), importedQuestions);
         try {
             if (db == null) {
@@ -118,10 +117,9 @@ public class NewExamController {
                         continue;
                     }
                     String text = parts[1].trim();
-                    String ans = parts[2].trim(); // TRUE or FALSE
+                    String ans = parts[2].trim();
                     list.add(new QuestionTF(text, ans.equalsIgnoreCase("TRUE")));
                 } else if (type.equalsIgnoreCase("MCQ")) {
-                    // PDF Format: MCQ;Text;C1;M1;C2;M2;C3;M3;C4;M4
                     if (parts.length < 10) {
                         System.err.println("Line " + lineNum + ": Invalid MCQ format. Expected 10 semicolon-separated parts.");
                         continue;

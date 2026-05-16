@@ -69,10 +69,8 @@ public class ServerController {
 
         examTable.setItems(activeExams);
 
-        // Start server automatically on port 3000 as shown in Join Exam.fxml
         startServer(3000);
 
-        // Auto-refresh table every 2 seconds
         javafx.animation.Timeline refreshTimer = new javafx.animation.Timeline(
             new javafx.animation.KeyFrame(javafx.util.Duration.seconds(2), e -> examTable.refresh())
         );

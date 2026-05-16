@@ -37,18 +37,15 @@ public class ClientHandler implements Runnable {
             out.flush();
             in  = new ObjectInputStream(socket.getInputStream());
 
-            // 1. Receive student name
             Message msg = (Message) in.readObject();
             if (msg.getType() != Message.Type.CONNECT) { sendError("Bad handshake"); return; }
             studentName = ((String) msg.getData()).trim();
             server.log("Student connected: " + studentName + " from " + socket.getInetAddress());
             LogManager.log("STUDENT_JOIN: " + studentName);
 
-            // 2. Send active exams
             List<ExamInfo> infoList = buildExamInfoList();
             send(new Message(Message.Type.EXAM_LIST, (java.io.Serializable) infoList));
 
-            // 3. Receive exam selection
             Message selMsg = (Message) in.readObject();
             if (selMsg.getType() != Message.Type.SELECT_EXAM) { sendError("Expected exam selection"); return; }
             int selectedId = (Integer) selMsg.getData();
@@ -59,16 +56,13 @@ public class ClientHandler implements Runnable {
             server.log(studentName + " selected exam: " + selectedExam.getExamName());
             LogManager.log("EXAM_SELECT: " + studentName + " -> " + selectedExam.getExamName());
 
-            // 4. Check if already completed
             if (db.hasCompleted(studentName, selectedExam.getExamId())) {
                 sendError("You have already completed this exam."); return;
             }
 
-            // 5. Send exam info (no questions)
             Exam examWithoutQs = new Exam(selectedExam.getExamId(), selectedExam.getExamName(), selectedExam.getYear(), selectedExam.getSemester(), selectedExam.getStartDateTime(), new ArrayList<>());
             send(new Message(Message.Type.EXAM_DATA, examWithoutQs));
 
-            // 6. Enter question loop
             int[] progress = db.getProgress(studentName, selectedExam.getExamId());
             currentIndex = progress[0];
             currentScore = progress[1];
@@ -82,7 +76,6 @@ public class ClientHandler implements Runnable {
             }
 
             while (currentIndex < totalQuestions) {
-                // Check if time expired
                 long minutes = java.time.Duration.between(selectedExam.getStartDateTime(), java.time.LocalDateTime.now()).toMinutes();
                 if (minutes >= 60) {
                     sendError("Exam time has expired (60 minutes).");
@@ -101,7 +94,6 @@ public class ClientHandler implements Runnable {
 
                 send(new Message(Message.Type.NEXT_QUESTION, dto));
 
-                // Wait for answer
                 Message ansMsg = (Message) in.readObject();
                 if (ansMsg.getType() != Message.Type.SUBMIT_ANSWER) {
                     sendError("Expected answer submission");
@@ -117,7 +109,6 @@ public class ClientHandler implements Runnable {
                 db.saveProgress(studentName, selectedExam.getExamId(), currentIndex, currentScore);
             }
 
-            // 7. Grade and finalize if completed
             if (currentIndex >= totalQuestions) {
                 Result result = new Result(studentName, selectedExam.getExamId(), selectedExam.getExamName(),
                                            selectedExam.getYear(), selectedExam.getSemester(),

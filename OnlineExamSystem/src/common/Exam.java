@@ -29,7 +29,7 @@ public class Exam implements Serializable {
     public void setExamId(int id) { this.examId = id; }
     public String getCourseName() { return courseName; }
     public void setCourseName(String n) { this.courseName = n; }
-    public String getExamName() { return courseName; } // Keep for backward compatibility if needed
+    public String getExamName() { return courseName; }
     public String getYear() { return year; }
     public void setYear(String year) { this.year = year; }
     public String getSemester() { return semester; }

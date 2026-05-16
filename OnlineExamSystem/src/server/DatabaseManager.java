@@ -14,13 +14,11 @@ public class DatabaseManager {
     private Connection conn;
 
     public DatabaseManager() throws SQLException {
-        // Create database if not exists
         try (Connection setupConn = DriverManager.getConnection(DB_URL, USER, PASS);
              Statement s = setupConn.createStatement()) {
             s.executeUpdate("CREATE DATABASE IF NOT EXISTS " + DB_NAME);
         }
         
-        // Connect to the specific database
         conn = DriverManager.getConnection(DB_URL + DB_NAME, USER, PASS);
         createTables();
         clearSession();
@@ -63,7 +61,6 @@ public class DatabaseManager {
                 "current_score INT DEFAULT 0, " +
                 "UNIQUE(student_name, exam_id))");
 
-            // Safety: Add column if it doesn't exist (for existing databases)
             try {
                 s.execute("ALTER TABLE EXAMS ADD COLUMN questions_blob LONGBLOB");
             } catch (SQLException ignored) {} 
@@ -80,7 +77,6 @@ public class DatabaseManager {
             p.setTimestamp(4, Timestamp.valueOf(exam.getStartDateTime()));
             p.setInt(5, exam.getQuestions().size());
             
-            // Serialize questions to blob
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
                  ObjectOutputStream oos = new ObjectOutputStream(baos)) {
                 oos.writeObject(exam.getQuestions());

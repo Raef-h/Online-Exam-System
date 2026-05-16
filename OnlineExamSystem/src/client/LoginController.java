@@ -45,11 +45,9 @@ public class LoginController {
                 out.flush();
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-                // Send student ID
                 out.writeObject(new Message(Message.Type.CONNECT, name));
                 out.flush();
 
-                // Receive exam list
                 Message reply = (Message) in.readObject();
                 if (reply.getType() == Message.Type.ERROR) {
                     Platform.runLater(() -> showError((String) reply.getData()));

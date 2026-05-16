@@ -1,25 +1,25 @@
-/* ─── GLOBAL ──────────────────────────────────────────────────── */
+
 .root-pane {
     -fx-background-color: #0f1117;
     -fx-font-family: "Segoe UI", "Arial", sans-serif;
     -fx-font-size: 14px;
 }
 
-/* ─── TOP BAR ─────────────────────────────────────────────────── */
+
 .top-bar {
     -fx-background-color: #1a1d2e;
     -fx-border-color: #2a2d3e;
     -fx-border-width: 0 0 1 0;
 }
 
-/* ─── SIDEBAR ─────────────────────────────────────────────────── */
+
 .sidebar {
     -fx-background-color: #12151f;
     -fx-border-color: #2a2d3e;
     -fx-border-width: 0 1 0 0;
 }
 
-/* ─── LABELS ──────────────────────────────────────────────────── */
+
 .app-title {
     -fx-text-fill: #e2e8f0;
     -fx-font-size: 20px;
@@ -69,7 +69,7 @@
     -fx-line-spacing: 4px;
 }
 
-/* ─── INPUT FIELDS ────────────────────────────────────────────── */
+
 .input-field {
     -fx-background-color: #1e2235;
     -fx-text-fill: #e2e8f0;
@@ -85,7 +85,7 @@
     -fx-background-color: #1e2745;
 }
 
-/* ─── BUTTONS ─────────────────────────────────────────────────── */
+
 .btn-primary {
     -fx-background-color: linear-gradient(to bottom right, #6366f1, #818cf8);
     -fx-text-fill: white;
@@ -146,7 +146,7 @@
 }
 .btn-secondary:disabled { -fx-opacity: 0.4; }
 
-/* ─── LOGIN HEADER ────────────────────────────────────────────── */
+
 .login-header {
     -fx-background-color: linear-gradient(to bottom, #1a1d2e, #0f1117);
 }
@@ -154,14 +154,14 @@
     -fx-background-color: #12151f;
 }
 
-/* ─── PAGE HEADER ─────────────────────────────────────────────── */
+
 .page-header {
     -fx-background-color: #1a1d2e;
     -fx-border-color: #2a2d3e;
     -fx-border-width: 0 0 1 0;
 }
 
-/* ─── TABLE VIEW ──────────────────────────────────────────────── */
+
 .table-view {
     -fx-background-color: #12151f;
     -fx-border-color: #2a2d3e;
@@ -195,7 +195,7 @@
     -fx-text-fill: #e2e8f0;
 }
 
-/* ─── LIST VIEW ───────────────────────────────────────────────── */
+
 .exam-list {
     -fx-background-color: #12151f;
     -fx-border-color: #2a2d3e;
@@ -216,7 +216,7 @@
 }
 .list-cell:hover { -fx-background-color: #1a1f35; }
 
-/* ─── LOG AREA ────────────────────────────────────────────────── */
+
 .log-area {
     -fx-background-color: #0a0c15;
     -fx-text-fill: #4ade80;
@@ -230,7 +230,7 @@
     -fx-background-color: #0a0c15;
 }
 
-/* ─── PROGRESS BAR ────────────────────────────────────────────── */
+
 .progress-bar {
     -fx-pref-height: 8px;
     -fx-background-radius: 4;
@@ -239,7 +239,7 @@
 .progress-bar .track { -fx-background-color: #1e2235; -fx-background-radius: 4; }
 .progress-bar .bar   { -fx-background-color: linear-gradient(to right, #6366f1, #818cf8); -fx-background-radius: 4; }
 
-/* ─── RADIO BUTTONS (Choices) ─────────────────────────────────── */
+
 .choice-btn {
     -fx-text-fill: #e2e8f0;
     -fx-font-size: 15px;
@@ -261,13 +261,13 @@
     -fx-border-color: #4f52d3;
 }
 
-/* ─── SEPARATOR ───────────────────────────────────────────────── */
+
 .separator .line {
     -fx-background-color: #2a2d3e;
     -fx-border-color: #2a2d3e;
 }
 
-/* ─── SCROLL BAR ──────────────────────────────────────────────── */
+
 .scroll-bar { -fx-background-color: #12151f; }
 .scroll-bar .thumb { -fx-background-color: #334155; -fx-background-radius: 4; }
 .scroll-bar .increment-button, .scroll-bar .decrement-button { -fx-background-color: transparent; }
